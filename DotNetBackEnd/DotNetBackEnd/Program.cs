@@ -1,35 +1,53 @@
+using DotNetBackEnd.Application.Common;
+using DotNetBackEnd.Application.Orders.Commands;
+using DotNetBackEnd.Domain.Repositories;
+using DotNetBackEnd.Infrastructure.Data;
+using DotNetBackEnd.Infrastructure.Messaging;
+using DotNetBackEnd.Infrastructure.Messaging.Consumers;
+using DotNetBackEnd.Infrastructure.Repositories.Ef;
 using MediatR;
-using System.Reflection;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Kafka config
+builder.Services.Configure<KafkaSettings>(
+    builder.Configuration.GetSection("Kafka"));
+
+// EF Core + SQL Server
+builder.Services.AddDbContext<OrderDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("OrderDb")));
+
+// MediatR
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssembly(typeof(CreateOrderCommand).Assembly);
+});
+
+// Repository
+builder.Services.AddScoped<IOrderRepository, EFOrderRepository>();
+
+// Event bus
+builder.Services.AddSingleton<IEventBus, KafkaEventBus>();
+
+// Kafka background consumers
+builder.Services.AddHostedService<PaymentProcessorService>();
+builder.Services.AddHostedService<InventoryProcessorService>();
+builder.Services.AddHostedService<OrderCompletionProcessorService>();
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddMediatR(x => x.RegisterServicesFromAssemblies(typeof(Program).Assembly));
-var bootstrapServers = Environment.GetEnvironmentVariable("KAFKA_BOOTSTRAP_SERVERS") ?? "localhost:29092";
-
-builder.Services.AddSingleton<KafkaProducer>(sp =>
-{
-    return new KafkaProducer(bootstrapServers);
-});
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
 app.MapControllers();
+app.MapGet("/health", () => "OK");
 
 app.Run();

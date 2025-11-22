@@ -1,6 +1,0 @@
-@DotNetBackEnd_HostAddress = http://localhost:5010
-
-GET {{DotNetBackEnd_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
