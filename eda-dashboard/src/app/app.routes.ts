@@ -1,8 +1,7 @@
 import { Routes } from '@angular/router';
 import { ShellComponent } from './core/layout/shell/shell.component';
 import { HomeComponent } from './features/home/home.component';
-
-const DummyLoginComponent = HomeComponent;
+import { LoginPanelComponent } from './core/auth/login-panel/login-panel.component';
 
 export const routes: Routes = [
   {
@@ -10,7 +9,7 @@ export const routes: Routes = [
     component: ShellComponent,
     children: [
       { path: '', component: HomeComponent },
-      { path: 'login', component: DummyLoginComponent },
+      { path: 'login', component: LoginPanelComponent },
     ]
   },
   { path: '**', redirectTo: '' }
