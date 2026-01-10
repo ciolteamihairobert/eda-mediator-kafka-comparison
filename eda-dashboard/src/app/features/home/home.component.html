@@ -1,0 +1,73 @@
+<section class="hero">
+  <h1>Comparative Analysis of Event-Driven Architectures</h1>
+  <p>
+    This dashboard visualizes benchmarking results for two implementations of
+    the same order-processing workflow: .NET (MediatR + Kafka) versus Go
+    (Kafka).
+  </p>
+
+  <div class="stats-row">
+    <div class="stat-chip">
+      <span class="stat-label">Stacks:</span>
+      <span class="stat-value">2</span>
+    </div>
+
+    <div class="stat-chip">
+      <span class="stat-label">Scenarios:</span>
+      <span class="stat-value">baseline • high-load • fault</span>
+    </div>
+
+    <div class="stat-chip">
+      <span class="stat-label">Metrics:</span>
+      <span class="stat-value">latency • throughput • cpu • memory</span>
+    </div>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <div class="label">Workflow</div>
+      <div class="value">Order Processing Pipeline</div>
+      <div class="desc">
+        A standardized, end-to-end business flow implemented identically in both
+        stacks, ensuring a fair comparison of event-driven execution.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="label">Latency</div>
+      <div class="value">P95 / P99</div>
+      <div class="desc">
+        Tail-latency measurements across the full pipeline, capturing real-world
+        behavior under load, including queueing and processing delays.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="label">Throughput</div>
+      <div class="value">Requests per Second</div>
+      <div class="desc">
+        Sustained throughput under controlled test scenarios, used to identify
+        bottlenecks related to runtime, IO, and message handling strategy.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="label">Resources</div>
+      <div class="value">CPU / Memory</div>
+      <div class="desc">
+        Runtime overhead profiling to evaluate efficiency and scalability
+        characteristics of .NET and Go under comparable workload intensity.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="label">Fault Tolerance</div>
+      <div class="value">Recovery & Resilience</div>
+      <div class="desc">
+        Behavior under failure conditions such as network delays, consumer
+        restarts, and broker unavailability, with emphasis on recovery time and
+        stability.
+      </div>
+    </div>
+  </div>
+</section>
