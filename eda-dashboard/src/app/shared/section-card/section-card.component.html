@@ -1,0 +1,13 @@
+<section class="card">
+  <div class="head">
+    <div>
+      <div class="kicker" *ngIf="kicker">{{ kicker }}</div>
+      <div class="title">{{ title }}</div>
+      <div class="desc" *ngIf="description">{{ description }}</div>
+    </div>
+    <div class="right"><ng-content select="[right]"></ng-content></div>
+  </div>
+  <div class="body">
+    <ng-content></ng-content>
+  </div>
+</section>

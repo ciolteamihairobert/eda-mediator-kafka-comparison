@@ -1,0 +1,121 @@
+<div class="wrap">
+  <header class="page-head">
+    <div>
+      <div class="h1">User Dashboard</div>
+      <div class="sub">
+        Read-only overview of benchmark results for the order-processing
+        pipeline.
+      </div>
+    </div>
+  </header>
+
+  <div class="kpis">
+    <app-kpi-card
+      *ngFor="let k of globalKpis"
+      [label]="k.label"
+      [value]="k.value"
+      [hint]="k.hint"
+    >
+    </app-kpi-card>
+  </div>
+
+  <!-- STACK-SPECIFIC SECTIONS -->
+  <div class="stack-grid">
+    <app-section-card
+      [kicker]="'Stack'"
+      [title]="dotnet.title"
+      [description]="dotnet.subtitle"
+    >
+      <div class="bullets">
+        <div class="bullet" *ngFor="let b of dotnet.bullets">{{ b }}</div>
+      </div>
+
+      <div class="mini-kpis">
+        <app-kpi-card
+          *ngFor="let k of dotnet.kpis"
+          [label]="k.label"
+          [value]="k.value"
+          [hint]="k.hint"
+        >
+        </app-kpi-card>
+      </div>
+    </app-section-card>
+
+    <app-section-card
+      [kicker]="'Stack'"
+      [title]="go.title"
+      [description]="go.subtitle"
+    >
+      <div class="bullets">
+        <div class="bullet" *ngFor="let b of go.bullets">{{ b }}</div>
+      </div>
+
+      <div class="mini-kpis">
+        <app-kpi-card
+          *ngFor="let k of go.kpis"
+          [label]="k.label"
+          [value]="k.value"
+          [hint]="k.hint"
+        >
+        </app-kpi-card>
+      </div>
+    </app-section-card>
+  </div>
+
+  <!-- SIDE-BY-SIDE COMPARISON -->
+  <app-section-card
+    [kicker]="'Comparison'"
+    title=".NET vs Go (side-by-side)"
+    description="Direct comparison across key metrics. Values shown are placeholders until backend metrics are connected."
+  >
+    <div class="compare-grid">
+      <div class="compare-col">
+        <div class="col-title">.NET</div>
+        <div class="col-sub">MediatR + Kafka</div>
+      </div>
+
+      <div class="compare-col">
+        <div class="col-title">Go</div>
+        <div class="col-sub">Kafka + goroutines</div>
+      </div>
+    </div>
+
+    <div class="charts">
+      <app-section-card
+        kicker="Latency"
+        title="Tail latency (P95 / P99)"
+        description="Lower is better."
+      >
+        <canvas baseChart [data]="latencyCompare" [type]="'bar'"></canvas>
+      </app-section-card>
+
+      <app-section-card
+        kicker="Throughput"
+        title="Sustained throughput"
+        description="Higher is better."
+      >
+        <canvas baseChart [data]="throughputCompare" [type]="'bar'"></canvas>
+      </app-section-card>
+
+      <app-section-card
+        kicker="Resources"
+        title="CPU / Memory"
+        description="Runtime overhead comparison."
+      >
+        <canvas baseChart [data]="resourceCompare" [type]="'bar'"></canvas>
+      </app-section-card>
+
+      <app-section-card
+        kicker="Notes"
+        title="How to read these charts"
+        description="Interpretation hints."
+      >
+        <ul class="notes">
+          <li>P95/P99 capture tail latency (queueing + processing).</li>
+          <li>Throughput indicates max stable processing rate.</li>
+          <li>CPU/Mem highlight scheduling + GC/runtime costs.</li>
+        </ul>
+      </app-section-card>
+    </div>
+  </app-section-card>
+</div>
