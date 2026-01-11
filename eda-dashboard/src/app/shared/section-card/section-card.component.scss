@@ -1,0 +1,21 @@
+.card {
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.03);
+  border-radius: 0.5rem;
+  padding: 0.8rem;
+  backdrop-filter: blur(8px);
+}
+
+.head {
+  display:flex;
+  justify-content:space-between;
+  gap: 0.8rem;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  margin-bottom: 12px;
+}
+
+.kicker { font-size: 12px; opacity: .65; }
+.title { font-size: 16px; font-weight: 750; margin-top: 2px; }
+.desc { font-size: 12px; opacity: .65; margin-top: 6px; max-width: 62ch; }
+.right { margin-left: auto; }
