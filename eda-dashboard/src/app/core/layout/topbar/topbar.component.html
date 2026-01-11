@@ -4,6 +4,26 @@
     <div class="subtitle">.NET (MediatR + Kafka) vs Go (Kafka)</div>
   </div>
   <div class="right">
-    <a class="btn" routerLink="/login">Login</a>
+    <button class="btn" *ngIf="!auth.isLoggedIn" (click)="openLogin()">
+      Login
+    </button>
+    <ng-container *ngIf="auth.isLoggedIn">
+      <span class="user">
+        {{ auth.state?.username }}
+        <small>({{ auth.state?.role }})</small>
+      </span>
+      <a class="link" routerLink="/dashboard-user" routerLinkActive="active">
+        Dashboard
+      </a>
+      <a
+        *ngIf="auth.role === 'admin'"
+        class="link"
+        routerLink="/dashboard-admin"
+        routerLinkActive="active"
+      >
+        Admin
+      </a>
+      <button class="btn ghost" (click)="logout()">Logout</button>
+    </ng-container>
   </div>
 </header>

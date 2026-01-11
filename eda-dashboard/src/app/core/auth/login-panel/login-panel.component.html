@@ -1,0 +1,44 @@
+<ng-container *ngIf="isOpen$ | async">
+  <div class="overlay" (click)="close()"></div>
+
+  <aside class="panel" role="dialog" aria-label="Login panel">
+    <div class="header">
+      <div>
+        <div class="title">Login</div>
+        <div class="subtitle">Access the benchmark dashboard</div>
+      </div>
+      <button class="icon-btn" (click)="close()" aria-label="Close">✕</button>
+    </div>
+
+    <form class="form" [formGroup]="form" (ngSubmit)="submit()">
+      <label>
+        <span>Username</span>
+        <input
+          formControlName="username"
+          placeholder="admin or user"
+          autocomplete="username"
+        />
+      </label>
+
+      <label>
+        <span>Password</span>
+        <input
+          type="password"
+          formControlName="password"
+          placeholder="••••••••"
+          autocomplete="current-password"
+        />
+      </label>
+
+      <div class="error" *ngIf="error">{{ error }}</div>
+
+      <button class="btn" type="submit" [disabled]="loading || form.invalid">
+        {{ loading ? "Signing in…" : "Login" }}
+      </button>
+
+      <div class="hint">
+        Default (dev): <code>admin/admin123</code> or <code>user/user123</code>
+      </div>
+    </form>
+  </aside>
+</ng-container>
