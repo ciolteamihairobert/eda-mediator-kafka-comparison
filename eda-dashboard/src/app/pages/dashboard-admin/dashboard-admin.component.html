@@ -1,0 +1,159 @@
+<div class="wrap">
+  <header class="page-head">
+    <div>
+      <div class="h1">Admin Dashboard</div>
+      <div class="sub">
+        Run benchmarks, inject faults, and export results (UI-only for now).
+      </div>
+    </div>
+
+    <div class="status-pill">
+      <span class="dot" [class.running]="status === 'Running'"></span>
+      <span>Status: {{ status }}</span>
+    </div>
+  </header>
+
+  <div class="kpis">
+    <app-kpi-card
+      *ngFor="let k of kpis"
+      [label]="k.label"
+      [value]="k.value"
+      [hint]="k.hint"
+    ></app-kpi-card>
+  </div>
+
+  <div class="grid">
+    <!-- CONTROL PANEL -->
+    <app-section-card
+      kicker="Control"
+      title="Benchmark controls"
+      description="These buttons will call backend endpoints later (docker/k6/faults)."
+    >
+      <div class="controls">
+        <div class="row">
+          <label>
+            <span>Scenario</span>
+            <select [(ngModel)]="scenario">
+              <option value="baseline">baseline</option>
+              <option value="high-load">high-load</option>
+              <option value="fault">fault</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Stack</span>
+            <select [(ngModel)]="selectedStack">
+              <option value="both">both</option>
+              <option value="dotnet">.NET only</option>
+              <option value="go">Go only</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="btns">
+          <button class="btn primary" (click)="start()">Start</button>
+          <button class="btn" (click)="stop()">Stop</button>
+          <button class="btn" (click)="reset()">Reset</button>
+        </div>
+
+        <div class="split"></div>
+
+        <div class="btns">
+          <button class="btn warn" (click)="injectFault('delay')">
+            Inject delay
+          </button>
+          <button class="btn warn" (click)="injectFault('restart')">
+            Restart consumer
+          </button>
+          <button class="btn warn" (click)="injectFault('broker')">
+            Broker outage
+          </button>
+        </div>
+
+        <div class="split"></div>
+
+        <div class="btns">
+          <button class="btn" (click)="export('csv')">Export CSV</button>
+          <button class="btn" (click)="export('json')">Export JSON</button>
+          <button class="btn" (click)="openGrafana()">Open Grafana</button>
+        </div>
+      </div>
+    </app-section-card>
+
+    <!-- AUDIT -->
+    <app-section-card
+      kicker="Audit"
+      title="Recent actions"
+      description="Last admin actions (local UI log)."
+    >
+      <div class="audit">
+        <div class="audit-row" *ngFor="let a of audit">
+          <div class="ts">{{ a.ts }}</div>
+          <div class="msg">{{ a.msg }}</div>
+        </div>
+      </div>
+    </app-section-card>
+
+    <!-- CHARTS -->
+    <app-section-card
+      kicker="Comparison"
+      title="Tail latency"
+      description="P95/P99 comparison between stacks."
+    >
+      <div class="chart">
+        <canvas
+          baseChart
+          [data]="latencyCompare"
+          [options]="chartOptions"
+          [type]="'bar'"
+        ></canvas>
+      </div>
+    </app-section-card>
+
+    <app-section-card
+      kicker="Comparison"
+      title="Throughput"
+      description="Sustained request rate (mock)."
+    >
+      <div class="chart">
+        <canvas
+          baseChart
+          [data]="throughputCompare"
+          [options]="chartOptions"
+          [type]="'bar'"
+        ></canvas>
+      </div>
+    </app-section-card>
+
+    <app-section-card
+      kicker="Comparison"
+      title="CPU / Memory"
+      description="Resource usage (mock)."
+    >
+      <div class="chart">
+        <canvas
+          baseChart
+          [data]="resourceCompare"
+          [options]="chartOptions"
+          [type]="'bar'"
+        ></canvas>
+      </div>
+    </app-section-card>
+
+    <!-- NOTES -->
+    <app-section-card
+      kicker="Notes"
+      title="What admin controls will do"
+      description="Implementation plan placeholders."
+    >
+      <ul class="notes">
+        <li><b>Start</b>: triggers docker compose + runs k6 scenarios.</li>
+        <li>
+          <b>Faults</b>: injects delays/restarts/outages to measure recovery.
+        </li>
+        <li><b>Export</b>: saves results for analysis and reproducibility.</li>
+        <li><b>Grafana</b>: opens dashboards backed by Prometheus metrics.</li>
+      </ul>
+    </app-section-card>
+  </div>
+</div>
