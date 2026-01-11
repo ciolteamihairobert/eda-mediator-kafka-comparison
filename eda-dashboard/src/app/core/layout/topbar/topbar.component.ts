@@ -1,23 +1,29 @@
 import { Component } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthUiService } from '../../auth/auth-ui.service';
 import { AuthService } from '../../auth/auth.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-topbar',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, CommonModule, RouterLinkActive],
   templateUrl: './topbar.component.html',
-  styleUrl: './topbar.component.scss'
+  styleUrl: './topbar.component.scss',
 })
 export class TopbarComponent {
-
   constructor(
-    private auth: AuthService,
+    public auth: AuthService,
     private ui: AuthUiService,
-    private router: Router) {}
+    private router: Router
+  ) {}
 
   public openLogin() {
     this.ui.open();
+  }
+
+  public logout() {
+    this.auth.logout();
+    this.router.navigateByUrl('/');
   }
 }

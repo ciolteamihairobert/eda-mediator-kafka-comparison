@@ -4,13 +4,14 @@ import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { AuthUiService } from '../auth-ui.service';
+import { LoginRequest } from '../auth.models';
 
 @Component({
   selector: 'app-login-panel',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './login-panel.component.html',
-  styleUrl: './login-panel.component.scss'
+  styleUrl: './login-panel.component.scss',
 })
 export class LoginPanelComponent {
   public loading = false;
@@ -20,7 +21,7 @@ export class LoginPanelComponent {
 
   public form = this.fb.group({
     username: ['', Validators.required],
-    password: ['', Validators.required]
+    password: ['', Validators.required],
   });
 
   constructor(
@@ -40,18 +41,19 @@ export class LoginPanelComponent {
     if (this.form.invalid) return;
 
     this.loading = true;
-    const { username, password } = this.form.value;
 
-    this.auth.login({ username: username!, password: password! }).subscribe({
-      next: () => {
+    this.auth.login(this.form.value as LoginRequest).subscribe({
+      next: (response) => {
         this.loading = false;
         this.close();
-        this.router.navigateByUrl('/dashboard');
+        this.router.navigateByUrl(
+          response.role === 'admin' ? '/dashboard-admin' : '/dashboard-user'
+        );
       },
       error: (err) => {
         this.loading = false;
         this.error = err?.error?.message ?? 'Login failed. Check credentials.';
-      }
+      },
     });
   }
 
